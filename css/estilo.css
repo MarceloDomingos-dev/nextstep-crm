@@ -27,6 +27,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .mark::after{content:"";position:absolute;right:-5px;top:-5px;width:14px;height:14px;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2 12 L12 2 M5 2 H12 V9' stroke='%23EF6C22' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
 .mark-lg{width:56px;height:56px;font-size:32px;border-radius:12px;background:var(--ink);color:#fff}
 .mark-lg::after{width:24px;height:24px;right:-9px;top:-9px}
+.logo{height:38px;width:auto;display:block}
+.auth-side .logo{height:64px}
+.logo-boot{height:auto;width:200px;max-width:70vw;mix-blend-mode:multiply}
 .boot{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--muted)}
 
 /* Login */

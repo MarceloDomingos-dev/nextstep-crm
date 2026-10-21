@@ -219,7 +219,7 @@ function renderConn(){ const c = $('#conn'); if (c) { c.className = 'conn' + (S.
 
 function shell(){
   return `<header class="top"><div class="top-in" style="position:relative">
-    <div class="brand"><span class="mark" aria-hidden="true">N</span>Next Step <small>CRM</small></div>
+    <div class="brand"><img class="logo" src="imagens/logo-branco.png" alt="Next Step" width="113" height="35"><small>CRM</small></div>
     <nav class="tabs" role="tablist" aria-label="Telas">
       <button class="tab" role="tab" data-view="funil">Funil</button>
       <button class="tab" role="tab" data-view="follow">Follow-ups<span class="badge" id="fu-badge" hidden></span></button>
@@ -264,12 +264,12 @@ function renderKpis(){
 
 /* ---------- Telas sem login ---------- */
 function viewSetup(){
-  return `<div class="boot"><span class="mark mark-lg" aria-hidden="true">N</span>
+  return `<div class="boot"><img class="logo-boot" src="imagens/logo.png" alt="Next Step" width="200" height="94">
     <div class="panel empty" style="max-width:520px"><h2>Falta conectar o banco de dados</h2>
     <p>Abra o arquivo <b>js/config.js</b> e cole a URL e a chave “anon public” do seu projeto no Supabase. O passo a passo está no LEIA-ME.</p></div></div>`;
 }
 function authSide(){
-  return `<aside class="auth-side"><div class="brand"><span class="mark" aria-hidden="true">N</span>Next Step <small>CRM</small></div>
+  return `<aside class="auth-side"><div class="brand"><img class="logo" src="imagens/logo-branco.png" alt="Next Step" width="113" height="35"><small>CRM</small></div>
     <div><h1>Do primeiro contato ao <em>contrato fechado.</em></h1><p>Funil, follow-ups e histórico de cada cliente da Next Step num lugar só, para você e sua equipe.</p></div>
     <div class="auth-steps">${ETAPAS.slice(0,6).map(e => `<span>${esc(e.nome)}</span>`).join('')}</div></aside>`;
 }
@@ -310,7 +310,7 @@ function viewPendente(){
     <button class="btn" data-act="sair" style="justify-content:center">Sair</button></div></div></div>`;
 }
 function viewProblema(text){
-  return `<div class="boot"><span class="mark mark-lg" aria-hidden="true">N</span><div class="panel empty" style="max-width:520px"><h2>Não foi possível abrir o CRM</h2><p>${esc(text)}</p>
+  return `<div class="boot"><img class="logo-boot" src="imagens/logo.png" alt="Next Step" width="200" height="94"><div class="panel empty" style="max-width:520px"><h2>Não foi possível abrir o CRM</h2><p>${esc(text)}</p>
     <div class="quick"><button class="btn btn-primary" data-act="verificar">Tentar de novo</button><button class="btn" data-act="sair">Sair</button></div></div></div>`;
 }
 
