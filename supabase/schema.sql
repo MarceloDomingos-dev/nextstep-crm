@@ -17,6 +17,17 @@ create table if not exists public.perfis (
   ativo      boolean not null default false,
   criado_em  timestamptz not null default now()
 );
+alter table public.perfis add column if not exists dono boolean not null default false;
+
+-- Donos da empresa: sempre entram como admin, com acesso liberado, e
+-- ninguém consegue bloquear ou rebaixar. Para incluir outro sócio, acrescente
+-- o e-mail na lista do insert abaixo e rode este arquivo de novo.
+create table if not exists public.donos (
+  email text primary key check (email = lower(email))
+);
+insert into public.donos (email) values
+  ('mmarcelodomingoss@gmail.com')
+on conflict do nothing;
 
 -- E-mails autorizados a criar conta (o admin cadastra na tela Equipe)
 create table if not exists public.convites (
@@ -81,16 +92,19 @@ language plpgsql security definer set search_path = public as $$
 declare
   v_conv convites%rowtype;
   v_primeiro boolean;
+  v_dono boolean;
 begin
   select not exists (select 1 from perfis where papel = 'admin' and ativo) into v_primeiro;
+  select exists (select 1 from donos where email = lower(new.email)) into v_dono;
   select * into v_conv from convites where email = lower(new.email);
-  insert into perfis (id, nome, email, papel, ativo)
+  insert into perfis (id, nome, email, papel, ativo, dono)
   values (
     new.id,
     coalesce(nullif(new.raw_user_meta_data->>'nome', ''), split_part(new.email, '@', 1)),
     lower(new.email),
-    case when v_primeiro then 'admin' else coalesce(v_conv.papel, 'vendedor') end,
-    v_primeiro or v_conv.email is not null
+    case when v_primeiro or v_dono then 'admin' else coalesce(v_conv.papel, 'vendedor') end,
+    v_primeiro or v_dono or v_conv.email is not null,
+    v_dono
   )
   on conflict (id) do nothing;
   if v_conv.email is not null then delete from convites where email = v_conv.email; end if;
@@ -228,6 +242,11 @@ revoke execute on function public.ao_criar_usuario() from public, anon, authenti
 create or replace function public.proteger_perfis() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
+  if exists (select 1 from donos where email = old.email) then
+    new.papel := 'admin'; new.ativo := true; new.dono := true;
+  else
+    new.dono := false;
+  end if;
   if old.papel = 'admin' and old.ativo and (new.papel <> 'admin' or not new.ativo)
      and (select count(*) from perfis where papel = 'admin' and ativo and id <> old.id) = 0 then
     raise exception 'A equipe precisa de pelo menos um admin ativo';
@@ -248,3 +267,9 @@ begin
     begin alter publication supabase_realtime add table public.notas; exception when duplicate_object then null; end;
   end if;
 end $$;
+
+-- ---------- Donos: aplica nas contas que já existem ----------
+alter table public.donos enable row level security;  -- só pelo SQL Editor
+revoke all on public.donos from anon, authenticated;
+update public.perfis p set papel = 'admin', ativo = true, dono = true
+  where p.email in (select email from public.donos);

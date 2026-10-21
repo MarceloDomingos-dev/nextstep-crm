@@ -204,7 +204,7 @@ function render(){
   $('#tab-equipe').hidden = S.me.papel !== 'admin';
   $('#me-btn').innerHTML = `<span class="avatar">${esc(initials(S.me.nome))}</span><span class="nm">${esc(S.me.nome)}</span><span class="conn ${S.online ? '' : 'off'}" id="conn" title="${S.online ? 'Conectado: atualiza em tempo real' : 'Sem tempo real: atualize a página para ver mudanças da equipe'}"></span>`;
   $('#menu').hidden = !S.menuOpen;
-  $('#menu').innerHTML = `<div class="who"><b>${esc(S.me.nome)}</b><span>${esc(S.me.email)} · ${S.me.papel === 'admin' ? 'Admin' : 'Vendedor'}</span></div>
+  $('#menu').innerHTML = `<div class="who"><b>${esc(S.me.nome)}</b><span>${esc(S.me.email)} · ${S.me.dono ? 'Dono' : S.me.papel === 'admin' ? 'Admin' : 'Vendedor'}</span></div>
     <button data-act="senha">Alterar minha senha</button><button data-act="sair">Sair</button>`;
   renderNotice(); renderKpis();
   const v = $('#view');
@@ -477,12 +477,12 @@ function viewEquipe(){
   const rows = pessoas.map(p => {
     const n = [...S.leads.values()].filter(l => l.responsavel === p.id && ATIVAS.includes(l.etapa)).length;
     return `<tr><td><b>${esc(p.nome)}</b>${p.id === S.me.id ? ' <span class="chip">você</span>' : ''}<div class="hint">${esc(p.email)}</div></td>
-      <td><select class="field" data-papel="${esc(p.id)}" aria-label="Papel de ${esc(p.nome)}"><option value="vendedor" ${p.papel === 'vendedor' ? 'selected' : ''}>Vendedor</option><option value="admin" ${p.papel === 'admin' ? 'selected' : ''}>Admin</option></select></td>
+      <td>${p.dono ? '<span class="chip owner">Dono · admin</span>' : `<select class="field" data-papel="${esc(p.id)}" aria-label="Papel de ${esc(p.nome)}"><option value="vendedor" ${p.papel === 'vendedor' ? 'selected' : ''}>Vendedor</option><option value="admin" ${p.papel === 'admin' ? 'selected' : ''}>Admin</option></select>`}</td>
       <td>${p.ativo ? '<span class="chip ok">Ativo</span>' : '<span class="chip today">Aguardando liberação</span>'}</td>
       <td class="num">${n}</td>
-      <td class="r">${p.ativo ? (p.id === S.me.id ? '' : `<button class="btn btn-sm btn-ghost" data-ativo="${esc(p.id)}" data-v="0">Bloquear acesso</button>`) : `<button class="btn btn-sm btn-primary" data-ativo="${esc(p.id)}" data-v="1">Liberar acesso</button>`}</td></tr>`;
+      <td class="r">${p.ativo ? (p.id === S.me.id || p.dono ? '' : `<button class="btn btn-sm btn-ghost" data-ativo="${esc(p.id)}" data-v="0">Bloquear acesso</button>`) : `<button class="btn btn-sm btn-primary" data-ativo="${esc(p.id)}" data-v="1">Liberar acesso</button>`}</td></tr>`;
   }).join('');
-  return `<div class="bar"><h1>Equipe</h1><span class="hint">Admin vê e edita tudo, exclui leads e gerencia a equipe. Vendedor vê e edita todos os leads.</span></div>
+  return `<div class="bar"><h1>Equipe</h1><span class="hint">Dono e admin veem e editam tudo, excluem leads e gerenciam a equipe. O dono não pode ser bloqueado. Vendedor vê e edita todos os leads.</span></div>
   <div class="team-grid" style="margin-top:12px">
     <div class="panel table-scroll"><table style="min-width:640px"><thead><tr><th>Pessoa</th><th>Papel</th><th>Acesso</th><th>Leads ativos</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
     <div class="panel inv"><h2>Convidar pessoa</h2>
