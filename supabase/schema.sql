@@ -74,7 +74,7 @@ language sql stable security definer set search_path = public as $$
   select exists (select 1 from perfis where id = auth.uid() and ativo and papel = 'admin');
 $$;
 
--- Quando alguém cria conta: o primeiro usuário vira admin; os outros só
+-- Quando alguém cria conta: enquanto não houver admin ativo, quem entra vira admin; os outros só
 -- entram ativos se o e-mail estiver na lista de convites.
 create or replace function public.ao_criar_usuario() returns trigger
 language plpgsql security definer set search_path = public as $$
@@ -82,7 +82,7 @@ declare
   v_conv convites%rowtype;
   v_primeiro boolean;
 begin
-  select not exists (select 1 from perfis) into v_primeiro;
+  select not exists (select 1 from perfis where papel = 'admin' and ativo) into v_primeiro;
   select * into v_conv from convites where email = lower(new.email);
   insert into perfis (id, nome, email, papel, ativo)
   values (
