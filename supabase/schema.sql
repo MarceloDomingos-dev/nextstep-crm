@@ -26,7 +26,7 @@ create table if not exists public.donos (
   email text primary key check (email = lower(email))
 );
 insert into public.donos (email) values
-  ('mmarcelodomingoss@gmail.com')
+  ('stepnext.soluctions@gmail.com')
 on conflict do nothing;
 
 -- E-mails autorizados a criar conta (o admin cadastra na tela Equipe)

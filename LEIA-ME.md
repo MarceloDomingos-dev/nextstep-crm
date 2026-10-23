@@ -48,7 +48,7 @@ Nunca use a chave **service_role** ou **secret** no CRM. A chave anon pode ficar
 
 1. Abra o CRM e clique em **Criar conta**. Use seu nome, e-mail e uma senha.
 2. Confirme o e-mail pelo link que o Supabase enviar e entre.
-3. **Donos**: o e-mail `mmarcelodomingoss@gmail.com` está cadastrado como dono no `schema.sql`. Conta de dono entra sempre como admin, com acesso liberado, e ninguém consegue bloquear ou rebaixar. Para incluir outro sócio, acrescente o e-mail dele na lista `insert into public.donos` do `schema.sql` e rode o arquivo de novo no SQL Editor.
+3. **Donos**: o e-mail `stepnext.soluctions@gmail.com` está cadastrado como dono no `schema.sql`. Conta de dono entra sempre como admin, com acesso liberado, e ninguém consegue bloquear ou rebaixar. Para incluir outro sócio, acrescente o e-mail dele na lista `insert into public.donos` do `schema.sql` e rode o arquivo de novo no SQL Editor.
 4. Enquanto não houver nenhum admin, a primeira conta criada também vira admin.
 
 ## Passo 6. Colocar a equipe
